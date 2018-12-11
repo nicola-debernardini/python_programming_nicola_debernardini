@@ -42,9 +42,10 @@ for l in f:
 		specie = spl2[0]+' '+spl2[1]
 		if specie != 'Homo sapiens':
 			header = l
+			true_specie = specie
 
 	elif l[0] == '>' and seq != '':
-		file_out.write(header+seq+'\n')
+		file_out.write(header+seq+'\n'+'The lengh of the sequence is %d and the source organism is %s' %(sequence_lengh,true_specie)+'\n\n\n')
 		seq = ''
 		header = ''	
 		spl = l.split('OS=')
@@ -52,12 +53,14 @@ for l in f:
 		specie = spl2[0]+' '+spl2[1]
 		if specie != 'Homo sapiens':
 			header = l
+			true_specie = specie
 	
 	elif l[0] != '>' and header:
 		seq += (l.strip()+'\n')
+		sequence_lengh = len(seq)
 
 if header:
-	file_out.write(header+seq+'\n')
+	file_out.write(header+seq+'\n'+'The lengh of the sequence is %d and the source organism is %s' %(sequence_lengh,true_specie))
 
 file_out.close()
 		 
