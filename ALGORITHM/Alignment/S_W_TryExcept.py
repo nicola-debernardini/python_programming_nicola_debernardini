@@ -1,10 +1,15 @@
 '''
+---------------------------------------------------------------
 What does the algorithm does? 
+
+Input:
 The algorithm take in input two DNA sequences and a scoring matrix and compute the best local alignment.
 
+Algorithm at work:
 The algorithm implement a dinamic programming approach that make the computation feaseble by reducing the complexity of the naif algorithm.
-In particular the agorithm performs the optimal local alignment between two sequences proceeding step by step 
-choosing between the higher score among the following possibility:
+In particular the agorithm performs the optimal local alignment between two sequences proceeding step by step and choosing between 
+the higher score among the following possibility:
+
 - previous score + gap penalties
 - previous score + match 
 - previous score + mismatch 
@@ -16,9 +21,12 @@ F(i,j) = Max {  F(i-1,j) -d
 			  | 0
 
 The substitution score is independent from the position in the sequence and the gap penalties type is linear. 
-The output are the two local aligned sequences.
 
-#############################
+Output:
+The output is the best local alignment between two sequences.
+
+----------------------------------------------------------------
+
 PSEUDOCODE:
 
 - Input the two DNA sequences
@@ -64,7 +72,7 @@ Define the Smith-Waterman algorithm function (seq1, seq2, gap, mismatch, match):
 
 	for cycle that iterates through the colum number:
 			for cycle that iterates through the row number:
-				matrix [i][j] (Assign to the cell in position i, j) = call the finction to calculate the max score of a specific cell 
+				matrix [i][j] (Assign to the cell in position i, j) = call the function to calculate the max score of a specific cell 
 				if matrix [i][j] it is now higer of matrix_max:
 					save the value of matrix [i][j] in matrix_max
 					Pos_matrix_max equal to the position of this cell
@@ -73,8 +81,8 @@ Define the Smith-Waterman algorithm function (seq1, seq2, gap, mismatch, match):
 	while the value in the cell take into cosideration is not 'Ter': 
 		Starting form the cell correspondent to (Pos_matrix_max) 
 		if the value in the cell is 'diag':
-			add the correcpondent character to alignmet 2 and 1 
-            if the two character are =:
+			add the correspondent character to alignmet 2 and 1 
+            if the two character are ==:
 				insert '|'  in variable is_match
 			else:
 				insert '.' in variable is_match 
@@ -106,6 +114,15 @@ Define the Smith-Waterman algorithm function (seq1, seq2, gap, mismatch, match):
 call the Needlman and Wunsh function
 '''
 
+# Brutal matrix
+def brutalMatrix(c,r):
+	m = []
+	for x in range(0,r):
+		m.append([])
+		for y in range(0,c):
+			m[x].append(0)
+	return m
+
 # Function to print matrix in a nice way:
 def prettymatrix(M):
 	for i in M:  # i assume the value of every line of the matrix 
@@ -119,7 +136,7 @@ def scoringMatrix (seq1,seq2):
 	scoring_matrix = [[0 for i in range(c)]for j in range (r)] # new scoring matrix with c columns and r rows  
 	return scoring_matrix
 
-# Traceback matrix inizializing finction 
+# Traceback matrix inizializing function 
 def tracebackMatrix (seq1,seq2):
 	c = len(seq1)+1 # num colum 
 	r = len(seq2)+1 # num row 
@@ -136,6 +153,7 @@ def tracebackMatrix (seq1,seq2):
 # 				| F(j,i-1) - d
 # F(j,i) = MAX {  F(j,i) + S(Pj,Bi)
 #				| F(j-1,i) -d
+
 def scoring_function(left, up, diag, gap, match, mismatch, char_seq1, char_seq2):
 	DIR = None
 	L = left + gap # F(j,i-1) - d
@@ -160,6 +178,7 @@ def scoring_function(left, up, diag, gap, match, mismatch, char_seq1, char_seq2)
 
 
 # Smith_Waterman function
+
 def S_W (seq1, seq2, gap, match, mismatch):
 	try: # verify if the sequence is a DNA sequence 
 		if (set(seq1) != {'A','G','C','T'} or set(seq2) != {'A','G','C','T'}):
@@ -258,4 +277,98 @@ if __name__ == '__main__':
 		mismatch = -2	
 		
 		al1, al2, mat = S_W (seq1, seq2, gap, match, mismatch)
-		
+
+
+
+
+# A PRIORI THINKING:
+
+# Implementation of the local alignment algorithm
+#ACTGG
+#ACT
+
+# DEFIN A MATRIX WHERE TO SAVE THE RESULT 
+#   0   A   C   T   G   G 
+# 0   
+#    
+# A 
+#         
+# C 
+#           
+# T 
+
+# BUILDING A MATRIX
+# n° colonne = len(seq1)+1
+# n° righe = len(seq2)+1
+
+# DEFINING GAP PENALTIES
+# gap_pen = -1
+
+# DEF A FUNCTION 
+# s(a,b) --> a=b 1
+#        --> a != b -1
+
+# INITIALIZATION 
+# colum1 = 0 
+# row1 = 0
+# DEFIN A MATRIX WHERE TO SAVE THE RESULT 
+#   0   A   C   T   G   G 
+# 0 0   0   0   0   0   0 
+#    
+# A 0
+#         
+# C 0
+#           
+# T 0  
+
+# COMPUTATION 
+#   0   A   C   T   G   G 
+# 0 0   0   0   0   0   0 
+#     \
+# A 0   1   0   0   0   0 
+#         \
+# C 0   0   2   1   0   0
+#             \
+# T 0   0   1   3 <-2 <-1
+
+# REMEMBER TRACEBACK BY BUILDING AN OTHER MATRIX
+#   0   A   C   T   G   G 
+# 0 0   0   0   0   0   0 
+#     
+# A 0   D 
+#      
+# C 0   0   D   R      
+#             
+# T 0   0   C   D   R   R
+
+
+# FIND THE HIGHEST VALUE IN THE MATRIX
+# find the index (i,j) with the highest value 
+
+
+# READ THE TRACEBACK
+# i,j = 3,3
+# this is the first match 
+# w = '' + seq1[i-1]
+# z = '' + seq2[j-1]
+
+# let start to move
+# if D:
+# i = -1
+# j = -1
+# w = w + seq1[i-1]
+# z = z + seq2[j-1]
+
+# if R: 
+# i = i 
+# j = -1
+# w = w + '-'
+# z = z + seq2[j-1]
+
+# if C: 
+# i = -1 
+# j = j
+# w = w + seq1[i-1]
+# z = z + '-'
+
+

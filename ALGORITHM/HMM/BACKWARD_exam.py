@@ -63,9 +63,9 @@ PSEUDOCODE
 			
 
 	# Termination:
-	# Sum the value for every states stored in the second column in the cell m[0][0]
+	# Sum the value for every states stored in the second column in the cell m[0][0] and multiply it for the transition probability from the state 'B' to state 'k' and by the emission prob of the first character of the sequnce from the state 'k'
 	- For cycle through the row of the second column:
-		m[0][0] += m[r][1] 
+		m[0][0] += m[r][1] * t['B'][states[r]] * e[states[r]][seq[0]]  
 	- Return the probability of the sequence stored in the last cell
 
 # define the main of the script

@@ -15,11 +15,15 @@ def SW(s1,s2,match,gap,mismatch):
     n_row = len(s2)+1
     m = matrix( n_col,n_row,type(1))
     m_t = matrix (n_col,n_row,type('0'))
+
     prettymatrix(m)
     prettymatrix(m_t)
+    
     max_cell = float('-inf')
     max_pos = None
     direction = ['0','D','L','U']
+    
+    # Iterations
     for c in range(1,n_col):
         for r in range(1,n_row):
             
@@ -89,9 +93,6 @@ def SW(s1,s2,match,gap,mismatch):
     prettymatrix(m_t)
 
     return (al1,al2,is_match)
-
-
-
 
 
 seq1 = 'AGCATGC'

@@ -1,45 +1,57 @@
 '''
-What does the algorithm does? 
+--------------------------------------------
+
+Needlman-Wunsh algorithm:
+
+Input:
 The algorithm take in input two DNA sequences and a scoring matrix and compute their global alignment.
 
-The algorithm implement a dinamic programming approach that make the computation feaseble. In particular
-the agorithm performs the optimal alignment between the two sequences (progressing step by step) 
-by chose the solution that maximize the score of the substring between the following possibility:
-previous score + gap penalties
-previous score + match 
-previous score + mistmatch 
-The substitution score is independent from the position and the gap penalties is linear. 
+Algorithm at work:
+The algorithm implement a dinamic programming approach that by reducing the complexity of the naif algorithm make the computation feaseble. 
+In particular the agorithm performs the optimal alignment by adding one gap or one character at the time to substrings of the sequences.
+The optimal solution is choose by selecting the one of the folloing result that maximize the alignment score of every pair of substring:
+- previous left_score + gap penalties
+- previous score + match/mismatch
+- previous up_score + gap penalties 
+The substitution score is independent from the position of the character in the sequence and the type of gap penalties adopted is linear. 
 
-The output are the two aligned sequences.
+Output:
+The output is the global alignment between the two sequences.
 
-#############################à
+-----------------------------------------------
+
 PSEUDOCODE:
 
-- Input the two DNA sequences
-- Define the gap penalties, match and mismatch 
-
-Define a function to initialize a matrix (two sequences, gap penalties):
+- Define a function to initialize a matrix (two sequences, gap penalties):
 	- Calculate the length of the two sequence 
-	- Generate a matrix that has a number of colums equal to the number character of the first sequence +1 and number of row equal to the number of character of the second sequence +1
+	- Generate a matrix (length of the first sequence +1) X (length of the second sequence +1) 
 	- Initialize the matrix filling it with 0 in cell [0][0] and with gap penalties multiplied by the row and colum index in the frist row and colum 
 	- Return the matrix 
 
-Define a fuction to calculate the max score of a specific cell (score of the up cell, left cell, diag cell, gap, match, mismatch, character(seq1), character(seq2)):
+#############
+- Define a function to intialize a traceback matrix (seq1, seq2):
+    - Calculate the length of the two sequence 
+	- Generate a matrix (length of the first sequence +1) X (length of the second sequence +1) 
+	- Initialize the matrix filling it with '0' the cell [0][0] with 'L' the cell in the first row and with 'U' the cell in the first column  
+	- Return the matrix 
+#############
+
+- Define a fuction to calculate the max score of a specific cell (score of the up cell, left cell, diag cell, gap, match, mismatch, character(seq1), character(seq2)):
 	- variable 'left' = left score + gap 
 	- variable 'up' = up score + gap 
-	if char(seq1) == char(seq2):
+	- if char(seq1) == char(seq2):
 		- variable 'diag' = score diag + match 
-	else:
+	- else:
 		- 'diag' = score diag + mismatch  
-	m = store the max between ('diag', 'left', 'up')
-	return( )
+	- m = store the max between ('diag', 'left', 'up')
+	- return( )
 
 
-Define the Needleman-Wunsh algorithm function (seq1, seq2, gap, mismatch, match):
-	matrix = call the finction to initialize the matrix 
-	for cycle that traverse the colum:
-			for cycle that traverse the row:
-				matrix [i][j] (cell in a specific position) = call the finction to calculate the max score of a specific cell 
+- Define the Needleman-Wunsh algorithm function (seq1, seq2, gap, mismatch, match):
+	- matrix = call the finction to initialize the matrix 
+	- for cycle that traverse the columns:
+			- for cycle that traverse the rows:
+				- matrix [i][j] (cell in a specific position) = call the finction to calculate the max score of a specific cell 
 
 	Create two variable (data structure type: string: alignment 1 and 2)
 	while the cell take in cosideration is not the cell [0][0]: 
@@ -58,21 +70,22 @@ Define the Needleman-Wunsh algorithm function (seq1, seq2, gap, mismatch, match)
 		move in the new position
 	
 	reverse alignment 1 alignment 2 and is_match 
-	
-	print alignment 1
-	print match 
-	print alignment 2
-
 	return the alingment 1 and 2 and is_match 
 
-call the Needlman and Wunsh function
+###############
+# Main:
 
-############ metti la funzione 
+- Input the two DNA sequences
+- Define the gap penalties, match and mismatch 
+- call the Needlman and Wunsh function
+- print to the screen the sequences and the global alignment 
 '''
+
 ################### NEEDLMAN_WUNSH ####################
 
 
 
+###########
 def initial_matrix (seq1,seq2,gap):
     S1 = len(seq1)
     S2 = len(seq2)
@@ -83,8 +96,8 @@ def initial_matrix (seq1,seq2,gap):
         matrix [j][0] = gap * j
     return matrix
 
-
-
+#############
+# function to calculate the max score of each cell
 def maxScore(up, left, diag, gap, match, mismatch, char_seq1, char_seq2):
     L = left + gap
     U = up + gap
@@ -95,7 +108,8 @@ def maxScore(up, left, diag, gap, match, mismatch, char_seq1, char_seq2):
     Max = max(D,L,U)
     return Max
 
-
+############
+# Needlman Wunsh 
 def N_W(seq1, seq2, gap, mismatch, match):
     
     S1 = len(seq1)
@@ -119,7 +133,6 @@ def N_W(seq1, seq2, gap, mismatch, match):
         if  aroundMax == Score_matrix [i-1][j-1]:
             alignment1 += seq1 [j-1]
             alignment2 += seq2 [i-1]
-
             if seq1[j-1] == seq2 [i-1]:
                 is_match += '|'
             else:
@@ -145,32 +158,30 @@ def N_W(seq1, seq2, gap, mismatch, match):
     alignment1 = alignment1[::-1]
     alignment2 = alignment2[::-1]
     is_match = is_match[::-1]
-
-    #prettyMatrix(Score_matrix)
-    print (alignment1)
-    print (is_match) 
-    print (alignment2)
-
     return alignment1, alignment2, is_match, Score_matrix  
 
+###########
 def prettyMatrix (M, file_out):
     for i in range(len(M)):
         j = str(M[i])
         file_out.write(j+'\n')
     return
 
+###########
+# Main: TAke the input and writhe the output from two different file
+
 if __name__ == '__main__':
     import sys
-    READ = sys.argv[1]
+    READ = sys.argv[1] # Take an input from the keybord 
     WRITE = sys.argv[2]
-    file_read = open(READ)
-    file_out = open(WRITE, 'w') 
+    file_read = open(READ) # Open a file 
+    file_out = open(WRITE, 'w') # Open a writable file 
     
     l = []
     for i in file_read:
-        i = i.strip()
-        print(len(i))
-        l.append(i)
+        i = i.strip() # Strip a string 
+        print(len(i)) 
+        l.append(i) # Append an element to a list 
     
     seq1 = l[0] 
     seq2 = l[1]
@@ -181,8 +192,9 @@ if __name__ == '__main__':
     mismatch = -1
     match = 1
     al1, al2, is_match, score_matrix = N_W (seq1, seq2, gap, mismatch, match)
-    file_out.write(al1+'\n')
+    
+    file_out.write(al1+'\n') # Write the output in a file ... NB it accpet only one argument 
     file_out.write(is_match+'\n')
     file_out.write(al2+'\n\n')
     prettyMatrix(score_matrix, file_out)
-    file_out.close()
+    file_out.close() # Close the file 

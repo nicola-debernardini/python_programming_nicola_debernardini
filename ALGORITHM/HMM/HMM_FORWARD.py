@@ -62,9 +62,9 @@ PSEUDOCODE
 			- m [r][c] =  m [r][c] * e[states[r]][seq[c-1]] # In order to reduce the number of calculations is possible to multiply the emissions probability only at the sum of the previous count
 
 	# Termination:
-	# Sum the value for every states stored in the cecond last column in the cell m[nrow][ncol]
+	# Sum the value for every states stored in the cecond last column in the cell m[nrow][ncol] and multiply it for the transition probability from the state 'k' to state 'E' 
 	- For cycle through the second last column:
-		m[nrow-1][ncol-1] += m[r][ncol-2] 
+		m[nrow-1][ncol-1] += m[r][ncol-2] * t[states[r]]['E']
 	- Return the probability of the sequence stored in the last cell
 
 # define the main of the script

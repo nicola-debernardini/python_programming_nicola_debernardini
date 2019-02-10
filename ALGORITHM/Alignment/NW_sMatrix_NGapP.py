@@ -1,13 +1,7 @@
-seq1 ='AGACTAGCATGCTAGCATGCGATCGTATGCATG'
-seq2 = 'GGAGAGTTACACTATTCTATCT'
-gap = -1
-Score_dict = {'A':{'A':1,'T':0.5,'C':-1,'G':-1}, \
-              'T':{'A':0.5,'T':1,'C':-1,'G':-1}, \
-              'C':{'A':-1,'T':-1,'C':1,'G':0.5}, \
-              'G':{'A':-1,'T':-1,'C':0.5,'G':1} \
-            }
+'''
+NEEDLMAN and WUNSH implemented using a simple DNA scoring matrix and a linear type gap penalties and no gap penalties ate the beginning or ath the end of the global alignment 
+'''
 
-keys = ['A','T','C','G']
 
 def prettymatrix (M):
     for i in range(len(M)):
@@ -133,9 +127,22 @@ def NW(seq1,seq2,keys,gap,Score_dict):
     return al1,al2
 ######################## THE END ############
 
-alignment1, alignment2 = NW(seq1,seq2,keys,gap,Score_dict)
-print ('\nThe original sequences are:\n%s\n%s' %(seq1,seq2))
+# # # # #
+# MAIN:
+if __name__ == '__main__':
 
+    seq1 ='AGACTAGCATGCTAGCATGCGATCGTATGCATG'
+    seq2 = 'GGAGAGTTACACTATTCTATCT'
+    gap = -1
+    Score_dict = {'A':{'A':1,'T':0.5,'C':-1,'G':-1}, \
+                'T':{'A':0.5,'T':1,'C':-1,'G':-1}, \
+                'C':{'A':-1,'T':-1,'C':1,'G':0.5}, \
+                'G':{'A':-1,'T':-1,'C':0.5,'G':1} \
+                }
 
-print ('\n\nAlignment is: ',alignment1)
-print ('              ',alignment2)
+    keys = ['A','T','C','G']
+    alignment1, alignment2 = NW(seq1,seq2,keys,gap,Score_dict)
+    print ('\nThe original sequences are:\n%s\n%s' %(seq1,seq2))
+
+    print ('\n\nAlignment is: ',alignment1)
+    print ('              ',alignment2)
